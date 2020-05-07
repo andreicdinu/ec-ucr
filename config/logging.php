@@ -47,6 +47,11 @@ return [
             'level' => 'debug',
         ],
 
+        'api_requests' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/api_requests.log'),
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
