@@ -11,6 +11,13 @@ class UpdateController extends Controller
      */
     public function updateAll(Request $request)
     {
+        /**
+         * DB start transaction
+         * cleanup database
+         * insert entities
+         * DB commit
+         * DB rollback
+         */
         return response()->json(['Information updated successfully'], 200);
     }
 }
