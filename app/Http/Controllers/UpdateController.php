@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Mockery\Exception;
 
 class UpdateController extends Controller
 {
@@ -14,9 +15,25 @@ class UpdateController extends Controller
      */
     public function updateAll(Request $request)
     {
-        $time1 = time();
-
         try {
+
+            $body = json_decode($request->getContent(), true);
+            if(!isset($body['users']) || count($body['users']) < 1) {
+                throw new \Exception('missing users');
+            }
+
+            if(!isset($body['websites']) || count($body['websites']) < 1) {
+                throw new \Exception('missing websites');
+            }
+
+            if(!isset($body['groups']) || count($body['groups']) < 1) {
+                throw new \Exception('missing groups');
+            }
+
+            if(!isset($body['website_user_groups'])) {
+                throw new \Exception('missing website_user_groups');
+            }
+
             DB::beginTransaction();
             Schema::disableForeignKeyConstraints();
 
@@ -25,8 +42,6 @@ class UpdateController extends Controller
             DB::table('websites')->truncate();
             DB::table('environments')->truncate();
             DB::table('website_user_groups')->truncate();
-
-            $body = json_decode($request->getContent(), true);
 
             DB::table('users')->insert($body['users']);
             DB::table('websites')->insert($body['websites']);
@@ -37,14 +52,14 @@ class UpdateController extends Controller
             Schema::enableForeignKeyConstraints();
             DB::commit();
 
+            Log::channel('api_requests')->info('updateAll success.');
+            return response()->json(['response' => 'Information updated successfully'], 200);
+
         } catch(\Exception $e) {
             Schema::enableForeignKeyConstraints();
             DB::rollBack();
-            Log::channel('api_requests')->error('updateAll error', ['message' => $e->getMessage()]);
+            Log::channel('api_requests')->error('updateAll error.', ['message' => $e->getMessage()]);
+            return response()->json(['response' => 'Something went wrong, please check logs'], 400);
         }
-
-        $time2 = time();
-        Log::channel('api_requests')->info('New request success', ['time_start' => $time1, 'time_end' => $time2]);
-        return response()->json(['Information updated successfully'], 200);
     }
 }

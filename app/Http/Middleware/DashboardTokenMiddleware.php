@@ -36,7 +36,7 @@ class DashboardTokenMiddleware
     {
         if(!$this->validateToken($request->header('UCR-TOKEN'))) {
             Log::channel('api_requests')->error('Wrong DASHBOARD token provided');
-//            abort(403, 'Unauthorized');
+            abort(403, 'Unauthorized');
         }
         return $next($request);
     }
