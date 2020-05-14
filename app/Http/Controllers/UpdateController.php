@@ -52,7 +52,12 @@ class UpdateController extends Controller
             Schema::enableForeignKeyConstraints();
             DB::commit();
 
-            Log::channel('api_requests')->info('updateAll success.');
+            Log::channel('api_requests')->info('updateAll success.', [
+                'users_total' => count($body['users']),
+                'websites_total' => count($body['websites']),
+                'environments_total' => count($body['environments']),
+                'groups_total' => count($body['groups']),
+            ]);
             return response()->json(['response' => 'Information updated successfully'], 200);
 
         } catch(\Exception $e) {
