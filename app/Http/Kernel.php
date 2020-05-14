@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'ip' => \App\Http\Middleware\IpMiddleware::class,
         'dash.token' => \App\Http\Middleware\DashboardTokenMiddleware::class,
+        'website.token' => \App\Http\Middleware\WebsiteTokenMiddleware::class,
     ];
 }
