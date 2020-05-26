@@ -21,3 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware(['ip', 'dash.token'])->group(function () {
     Route::post('/update-all', 'UpdateController@updateAll');
 });
+
+Route::middleware(['website.token'])->group(function () {
+    Route::get('/get-user-groups', 'RetrieveController@getUserGroups');
+});
